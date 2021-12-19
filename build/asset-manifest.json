@@ -1,0 +1,31 @@
+{
+  "files": {
+    "main.css": "/static/css/main.2b153d4a.chunk.css",
+    "main.js": "/static/js/main.08e4db1b.chunk.js",
+    "runtime-main.js": "/static/js/runtime-main.d049152d.js",
+    "static/css/2.c319eed3.chunk.css": "/static/css/2.c319eed3.chunk.css",
+    "static/js/2.7374928b.chunk.js": "/static/js/2.7374928b.chunk.js",
+    "static/js/3.e350574f.chunk.js": "/static/js/3.e350574f.chunk.js",
+    "index.html": "/index.html",
+    "static/js/2.7374928b.chunk.js.LICENSE.txt": "/static/js/2.7374928b.chunk.js.LICENSE.txt",
+    "static/media/index.css": "/static/media/GothamBlackRegular.8c419f68.ttf",
+    "static/media/checkbox_off.ebfa1ae5.svg": "/static/media/checkbox_off.ebfa1ae5.svg",
+    "static/media/checkbox_on.43488048.svg": "/static/media/checkbox_on.43488048.svg",
+    "static/media/filter_down.afa82703.svg": "/static/media/filter_down.afa82703.svg",
+    "static/media/filter_down_active.e49f0fe4.svg": "/static/media/filter_down_active.e49f0fe4.svg",
+    "static/media/hide_button_off.10a2f904.svg": "/static/media/hide_button_off.10a2f904.svg",
+    "static/media/hide_button_on.914f008c.svg": "/static/media/hide_button_on.914f008c.svg",
+    "static/media/img_icon.be1c529a.svg": "/static/media/img_icon.be1c529a.svg",
+    "static/media/login-bg.ef2c4d71.png": "/static/media/login-bg.ef2c4d71.png",
+    "static/media/logo.673ad892.svg": "/static/media/logo.673ad892.svg",
+    "static/media/logo_w.20ca3274.svg": "/static/media/logo_w.20ca3274.svg",
+    "static/media/settings.c33b06cb.svg": "/static/media/settings.c33b06cb.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.d049152d.js",
+    "static/css/2.c319eed3.chunk.css",
+    "static/js/2.7374928b.chunk.js",
+    "static/css/main.2b153d4a.chunk.css",
+    "static/js/main.08e4db1b.chunk.js"
+  ]
+}
