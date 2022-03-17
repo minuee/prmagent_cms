@@ -66,3 +66,9 @@ export const phoneFormat = (val) => {
 export const isEmpty = (str) => {
   return str === null || str === undefined || str === '' || (typeof str === 'object' && Array.isArray(str) === false && Object.keys(str).length === 0);
 };
+
+export const  filterOnlyDigit = (str) => {
+  var regex = /[^0-9;]/g;				// 숫자가 아닌 문자열을 선택하는 정규식
+  var result = str.replace(regex, "");
+  return result;
+};

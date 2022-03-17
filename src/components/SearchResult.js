@@ -15,7 +15,6 @@ export default function SearchResult({ data, type, checked, setChecked, opt }) {
         opt.forEach((d) => {
           allValue.push(d.label);
         });
-        console.log('CHK : ', allValue);
         setChecked({ ...checked, [type]: allValue });
       }
     } else {

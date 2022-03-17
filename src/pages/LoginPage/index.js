@@ -119,7 +119,7 @@ export default function LoginPage() {
       },
       async (data) => {
         // 성공처리
-        console.log('signInFuntion -> data', data);
+
         // dispatch({ type: "SET_CURRENT_AUTH_UI_STATE", payload: isLoading });
         // // 유저 정보 가져오기
 
@@ -127,10 +127,7 @@ export default function LoginPage() {
         //   langCode: "ko",
         //   loadingFunction,
         // });
-        // console.log("signInFuntion -> userData", userData);
-        // console.log("signInFuntion -> userData", JSON.stringify(userData.list));
-        // console.log("signInFuntion -> userData", userData.list[0]);
-
+   
         dispatch({
           type: 'SIGN_IN',
           payload: {
@@ -144,8 +141,7 @@ export default function LoginPage() {
         // history.push('/pr/set-login-image');
       },
       (data) => {
-        console.log('signInFuntion -> reconfirm', data);
-
+   
         // dispatch({
         //   type: "SET_CURRENT_AUTH_UI_STATE",
         //   payload: CurrentAuthUiState.CONFIRM_SIGN_UP,
@@ -153,7 +149,7 @@ export default function LoginPage() {
       },
       (error) => {
         // 실패처리,
-        console.log('signInFuntion -> error', error);
+    
         alert(error.message);
       },
       () => {}

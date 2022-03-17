@@ -40,8 +40,7 @@ export default function TermsOfServicePage() {
   });
 
   let handleEditBtnClick = () => {
-    console.log(value);
-    console.log('edit');
+
   };
   let handleSaveBtnClick = () => {
     saveNewToS.mutate(
@@ -52,7 +51,7 @@ export default function TermsOfServicePage() {
     );
   };
   let handleCancelBtnClick = () => {
-    console.log('cancel');
+
   };
 
   const [value, setValue] = useState('');

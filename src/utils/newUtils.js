@@ -29,6 +29,11 @@ const newUtils = {
   convertUnixToDate(unix,reform) {
     return moment.unix(unix).format("YYYY-MM-DD");
   },
+  filterOnlyDigit(str) {
+    var regex = /[^0-9;]/g;				// 숫자가 아닌 문자열을 선택하는 정규식
+    var result = str.replace(regex, "");
+    return result;
+  },
   dateToDate(val) {
     const happyNewYear = new Date(val);
     const year = happyNewYear.getFullYear(); 
@@ -56,7 +61,6 @@ const newUtils = {
     return _fileExt;
   },
   replaceStatus1(cd) {
-    //console.log('dddd',cd);
     let retVal = "홀딩 대기";
     if ( cd == 'Confirmed' || cd == 'confirmed' ) {
       retVal = "홀딩 완료";
@@ -378,7 +382,7 @@ const newUtils = {
     return !!email.match(EMAIL_FORMAT);
   },
   isPassword(password) {
-    console.log("CHECK:");
+
     if (!_.isString(password)) {
       return false;
     }

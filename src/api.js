@@ -4,7 +4,7 @@ import { DomainDisabledOutlined } from '@material-ui/icons';
 import { Api } from '@psyrenpark/api';
 import { Storage } from '@psyrenpark/storage';
 import { v4 as uuidv4 } from 'uuid';
-
+import * as utils from "utils";
 var projectName = 'fpradmin'; // 각 프로젝트 단축명
 var projectEnv = 'prod'; // 각 프로젝트 환경 // dev, test, prod
 
@@ -132,7 +132,6 @@ export const apiObject = {
         loadingFunction // 로딩이 필요하다면 넣는다.
       );
 
-      console.log(data);
       var apiName = v1Api;
       var path = '/cms/login-image';
       var init = {
@@ -256,7 +255,7 @@ export const apiObject = {
     };
     return await Api.get(apiName, path, init, loadingFunction);
   },
-  setUserLogoImgUpdate: async ({ user_type, brand_id, mgzn_id, img_file , img_regist, user_color}) => {
+  setUserLogoImgUpdate: async ({ user_type, brand_id, mgzn_id, img_file , img_regist, user_color,order_value}) => {
     var apiName = v1Api;
     var path = '/cms/user/img-update';
     var init = {
@@ -264,10 +263,10 @@ export const apiObject = {
         user_type,
         brand_id,
         mgzn_id,
-        user_color
+        user_color,
+        order_value
       },
     };
-    console.log('setUserLogoImgUpdate', user_type, brand_id, mgzn_id, img_file , img_regist, user_color)
     if ( img_regist ) {
       const file_name = uuidv4();
       const file_extension = img_file.name
@@ -381,6 +380,40 @@ export const apiObject = {
     return await Api.get(apiName, path, init, loadingFunction);
   },
 
+  registSubscribe: async ({ subscr_man_id, brand_id,start_date,end_date,subscr_se_cd,subscr_status_cd,subscr_chrge_amt },loadingFunction = () => {}
+  ) => {
+    var apiName = v1Api;
+    var path = `/cms/subscr-regist`;
+    var init = {
+      body: {
+        subscr_man_id,
+        brand_id,
+        start_date,
+        end_date,
+        subscr_se_cd,
+        subscr_status_cd,
+        subscr_chrge_amt
+      },
+    };
+    //console.log(('registSubscribe',init))
+    return await Api.post(apiName, path, init, loadingFunction);
+  },
+
+  cancleSubscribe: async ({ subscr_no,subscr_man_id,brand_id },loadingFunction = () => {}
+  ) => {
+    var apiName = v1Api;
+    var path = `/cms/subscr-cancel`;
+    var init = {
+      queryStringParameters: {
+        subscr_no,
+        subscr_man_id,
+        brand_id
+      },
+    };
+    //console.log(('cancleSubscribe',init))
+    return await Api.del(apiName, path, init, loadingFunction);
+  },
+
   downloadSubscrExcel: async (
     { order, asc, start_dt, end_dt },
     loadingFunction = () => {}
@@ -457,6 +490,29 @@ export const apiObject = {
     return Api.get(apiName, path, init, loadingFunction);
   },
 
+  getIndividualSetup: async (loadingFunction = () => {}) => {
+    var apiName = v1Api;
+    var path = `/cms/setup-info`;
+    var init = {
+      queryStringParameters: {},
+    };
+    return await Api.get(apiName, path, init, loadingFunction);
+  },
+
+  setIndividualSetup: async ({
+    tel_list,
+  }) => {
+    var apiName = v1Api;
+    var path = `/cms/setup-info`;
+    var init = {
+      body: {
+        tel_list : utils.filterOnlyDigit(tel_list)
+      },
+    };
+    console.log('tel_list',init)
+
+    return Api.put(apiName, path, init);
+  },
   getIndividualNotice: async ({ notice_no }, loadingFunction = () => {}) => {
     var apiName = v1Api;
     var path = `/cms/notice/${notice_no}`;
@@ -563,8 +619,6 @@ export const apiObject = {
   },
 
   sendPushNotice: async ({ notice_no,target_group }, loadingFunction = () => {}) => {
-    console.log('notice_no',notice_no);
-    console.log('target_group',target_group);
     var apiName = v1Api;
     var path = `/cms/notice/pushsend/${notice_no}`;
     var init = {

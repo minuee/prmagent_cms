@@ -118,10 +118,6 @@ export default function Pagination({
       : PAGINATION;
   // NOW_PAGE_BLOCK === PAGINATION ? totalCount : NOW_PAGE_BLOCK * pageSize;
 
-  // console.log("NOW PAGE BLOCK : ", NOW_PAGE_BLOCK);
-  // console.log("PAGINATION : ", PAGINATION);
-  // console.log("start page index : ", startPageIndex);
-  // console.log("lasg page index : ", lastPageIndex);
 
   const numberList = [];
   for (let i = startPageIndex; i <= lastPageIndex; i++) {

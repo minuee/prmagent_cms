@@ -1,4 +1,7 @@
 import { atom } from "recoil";
+
+const nowDate = new Date();
+
 export const currentDrawer = atom({
 	key: "currentDrawer",
 	default: true
@@ -19,7 +22,7 @@ export const currentPageName = atom({
 //공지사항 필터  start
 export const currentNoticeStartDate= atom({
 	key: "currentNoticeStartDate",
-	default: new Date('2021', 0, 1)
+	default: new Date(nowDate.setMonth(nowDate.getMonth() - 1))
 });
 export const currentNoticeEndDate= atom({
 	key: "currentNoticeEndDate",
@@ -46,7 +49,7 @@ export const currentNoticeChevronDirection = atom({
 //문의사항 필터  start
 export const currentInquiryStartDate= atom({
 	key: "currentInquiryStartDate",
-	default: new Date('2021', 0, 1)
+	default: new Date(nowDate.setMonth(nowDate.getMonth() - 1))
 });
 export const currentInquiryEndDate= atom({
 	key: "currentInquiryEndDate",
@@ -73,7 +76,7 @@ export const currentInquiryChevronDirection = atom({
 //구독관리 필터  start
 export const currentSubscrStartDate= atom({
 	key: "currentSubscrStartDate",
-	default: new Date('2021', 0, 1)
+	default: new Date(nowDate.setMonth(nowDate.getMonth() - 1))
 });
 export const currentSubscrEndDate= atom({
 	key: "currentSubscrEndDate",

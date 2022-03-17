@@ -1,4 +1,4 @@
-import { Box, CircularProgress,FormControl,makeStyles,OutlinedInput } from '@material-ui/core';
+import { Box, Typography,Grid,CircularProgress,FormControl,makeStyles,OutlinedInput } from '@material-ui/core';
 import styled, { css } from 'styled-components';
 import { CloseOutlined } from '@material-ui/icons';
 import { darken } from 'polished';
@@ -8,8 +8,7 @@ import PageSubtitle from 'components/PageSubtitle';
 import SaveButtonSection from 'components/SaveButtonSection';
 import ImageUpload from 'components/ImageUpload';
 import dayjs from 'dayjs';
-import React, { useRef, useState, useEffect } from 'react';
-import { Fragment } from 'react';
+import React, { useRef, useState, useEffect,useCallback } from 'react';
 import { useQuery, useMutation } from 'react-query';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { fetchUserDetail } from './common';
@@ -17,30 +16,58 @@ import { phoneFormat, numberWithCommas } from 'utils';
 import { apiObject } from 'api';
 
 import DetailTable from 'components/DetailTable';
+import FilterDialog from "./FilterDialog";
 import { USER_DETAIL_TABLE, USER_DETAIL_TABLE_STYLIST } from './UsersPageMock';
 import ImgIcon from 'asset/images/img_icon.svg';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
     textAreaInput: {
         border: 0,
     },
     zeroPadding: {
         padding: 0,
     },
+    titleContainer: {
+        marginBottom: theme.spacing(2.25),
+    },
+    gridWrap : {
+        flex:1,
+        display:'flex',
+        flexDirection:'row',
+        justifyContent:'space-between'
+    },
+    SubtitleText: {
+        fontWeight: 'bold',
+    },
 }));
+
 
 export default function UserDetailPage() {
     const classes = useStyles();
     const { userId, userType } = useParams();
     const { state: locationState } = useLocation();
     const colorInputRef = useRef(null);
+    const orderValueInputRef = useRef(null);
     const [logoImg, setLogoImg] = useState({
         url: '',
         file: null,
         name: '',
         uploadYn: false,
     });
-    
+    const [filterDialogOpen, setFilterDialogOpen] = useState(false);
+
+    const handleFilterClick = useCallback(() => {
+        setFilterDialogOpen(true);
+    }, [filterDialogOpen]);
+
+    const handleFilterDialogOpen = useCallback(() => {
+        setFilterDialogOpen(false);
+        setLogoImg({url: '',file: null,name: '',uploadYn: false});
+        userDetailQuery.refetch();
+    },[])
+    const closeFilterDialogOpen = useCallback(() => {
+        setFilterDialogOpen(false);
+    },[])
     const IMAGE_URL = 'https://fpr-prod-file.s3-ap-northeast-2.amazonaws.com/';
 
     const handleImgUpload = ({ target }) => {
@@ -70,6 +97,10 @@ export default function UserDetailPage() {
         accessor: 'SUBSCRIPT_TYPE',
     },
     {
+        Header: '구독신청일',
+        accessor: 'reg_dt',
+    },
+    {
         Header: '구독시작일',
         accessor: 'begin_dt',
     },
@@ -78,8 +109,16 @@ export default function UserDetailPage() {
         accessor: 'end_dt',
     },
     {
+        Header: '취소일',
+        accessor: 'canc_dt',
+    },
+    {
         Header: '가격',
         accessor: 'pay',
+    },
+    {
+        Header: '비고',
+        accessor: 'regist_type',
     },
     ],
         []
@@ -94,6 +133,8 @@ export default function UserDetailPage() {
         userDetailQuery.data.subscript_history.map((item) => ({
             ...item,
             SUBSCRIPT_TYPE: item.SUBSCRIPT_TYPE ?? '-',
+            reg_dt: item.reg_dt ? dayjs.unix(item.reg_dt).format('YYYY-MM-DD') : '-',
+            canc_dt: item.canc_dt ? dayjs.unix(item.canc_dt).format('YYYY-MM-DD') : '-',
             begin_dt: item.begin_dt ? dayjs.unix(item.begin_dt).format('YYYY-MM-DD') : '-',
             end_dt: item.end_dt ? dayjs.unix(item.end_dt).format('YYYY-MM-DD') : '-',
             pay: item.pay ? numberWithCommas(item.pay) : '-',
@@ -122,6 +163,7 @@ export default function UserDetailPage() {
             expire_dt: userDetailQuery.data.expire_dt,
             amount: userDetailQuery.data.amount,
             user_color : userDetailQuery.data.user_color,
+            order_value : userDetailQuery.data.order_value,
             origin_logo_img_url : userDetailQuery.data.logo_img_url,
             user_color_form : (
                 <FormControl variant="outlined" fullWidth={true}>
@@ -131,6 +173,17 @@ export default function UserDetailPage() {
                         classes={{notchedOutline: classes.textAreaInput,input: classes.zeroPadding}}
                         inputRef={colorInputRef}
                         defaultValue={userDetailQuery.data.user_color}
+                    />
+                </FormControl>
+            ),
+            order_value_form : (
+                <FormControl variant="outlined" fullWidth={true}>
+                    <OutlinedInput
+                        id="order_value_form"
+                        placeholder={'우선순위(기본 100, 작은수록 앞으로)'}
+                        classes={{notchedOutline: classes.textAreaInput,input: classes.zeroPadding}}
+                        inputRef={orderValueInputRef}
+                        defaultValue={userDetailQuery.data.order_value}
                     />
                 </FormControl>
             ),
@@ -208,6 +261,7 @@ export default function UserDetailPage() {
             expire_dt: userDetailQuery.data.expire_dt,
             amount: userDetailQuery.data.amount,
             user_color : userDetailQuery.data.user_color,
+            order_value: userDetailQuery.data.order_value,
         }
     );
 
@@ -216,7 +270,6 @@ export default function UserDetailPage() {
             alert('등록/변경되었습니다.');
         },
         onError: (error) => {
-            console.log('errrr',error)
             alert('등록/변경 중 오류가 발생했습니다.');
         },
     });
@@ -233,6 +286,7 @@ export default function UserDetailPage() {
                         img_file: logoImg.file, 
                         img_regist : true,
                         user_color: colorInputRef.current.value,
+                        order_value: data.order_value,
                     });
                 } else if (data.user_type === 'MAGAZINE') {
                     updateQuery.mutate({
@@ -241,9 +295,10 @@ export default function UserDetailPage() {
                         img_file: logoImg.file,
                         img_regist : true,
                         user_color: colorInputRef.current.value,
+                        order_value : 0
                     });
                 }
-            }else if ( colorInputRef.current.value !== data.user_color) {                
+            }else if ( colorInputRef.current.value !== data.user_color || orderValueInputRef.current.value !== data.order_value) {
                 if (data.user_type === 'BRAND') {
                     updateQuery.mutate({
                         user_type: data.user_type,
@@ -251,6 +306,7 @@ export default function UserDetailPage() {
                         img_file: data.origin_logo_img_url, 
                         img_regist : false,
                         user_color: colorInputRef.current.value,
+                        order_value : orderValueInputRef.current.value
                     });
                 } else if (data.user_type === 'MAGAZINE') {
                     updateQuery.mutate({
@@ -259,6 +315,7 @@ export default function UserDetailPage() {
                         img_file: data.origin_logo_img_url,
                         img_regist : false,
                         user_color: colorInputRef.current.value,
+                        order_value: data.order_value,
                     });
                 }             
             } else {
@@ -284,6 +341,7 @@ export default function UserDetailPage() {
         return () => {};
     }, [userDetailQuery]);
 
+
     return (
         <>
             <PageSubtitle textContent="사용자 관리" />
@@ -297,27 +355,55 @@ export default function UserDetailPage() {
                         data={data}
                         header={data.user_type !== 'STYLIST' ? USER_DETAIL_TABLE : USER_DETAIL_TABLE_STYLIST}
                     />
-                    {
-                        data.user_type !== 'STYLIST' && (
-                        <BtnGroup>
-                            <Btn type="cancel" onClick={handleCancelBtnClick}>취소</Btn>
-                            <Btn type="confirm" onClick={handleSaveBtnClick}>저장</Btn>
-                        </BtnGroup>
-                        )
-                    }
-                    <PageSubtitle textContent="User History" />
-                    <Box mb={5}>
-                        <BaseTable
-                            columns={columns}
-                            data={subScriptData}
-                            hasPagination={false}
-                        />
-                    </Box>
-                    <BtnGroup>
+                    <BtnGroup>                    
+                        <Btn type="cancel" onClick={handleCancelBtnClick}>취소</Btn>
+                        <Btn type="confirm" onClick={handleSaveBtnClick}>저장</Btn>                       
                         <Btn type="cancel" onClick={() => history.push('/pr/users')}>목록</Btn>
                     </BtnGroup>
+                    { userDetailQuery.data.user_type === 'BRAND' && 
+                    <>
+                        
+                        {/* <PageSubtitle textContent="구독 내역" />> */}
+                        <Grid
+                            container
+                            classes={{ root: classes.titleContainer }}
+                            justify="space-between"
+                            alignItems="center"
+                        >
+                            <Grid item classes={{ root: classes.gridWrap }}>
+                                <Typography
+                                    variant="h5"
+                                    classes={{ root: classes.SubtitleText }}
+                                    display="inline"
+                                >
+                                구독 내역
+                                </Typography>
+                                <Btn type="cancel" onClick={handleFilterClick}>구독추가</Btn>
+                            </Grid>                       
+                        </Grid>
+                        <Box mb={5}>
+                            <BaseTable
+                                columns={columns}
+                                data={subScriptData}
+                                hasPagination={false}
+                            />
+                        </Box>
+                    </>
+                    }
+                    
                 </>
             )}
+            {userDetailQuery.isLoading 
+            ?
+            null
+            :
+            <FilterDialog
+                open={filterDialogOpen}
+                setOpen={handleFilterDialogOpen}
+                setClose={closeFilterDialogOpen}
+                userData={userDetailQuery}
+            />
+            }
         </>
     );
 }

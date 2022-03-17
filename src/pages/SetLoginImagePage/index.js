@@ -81,7 +81,7 @@ export default function SetLoginImagePage() {
     [loginImageQuery.data, files]
   );
   let handleEditBtnClick = () => {
-    console.log('edit');
+
   };
   let handleSaveBtnClick = () => {
     if (files.length) {
@@ -91,7 +91,7 @@ export default function SetLoginImagePage() {
     }
   };
   let handleCancelBtnClick = () => {
-    console.log('cancel');
+   
   };
   return (
     <>

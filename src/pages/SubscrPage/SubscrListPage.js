@@ -79,7 +79,7 @@ export default function SubscrPage(props) {
         );
     };
     const handleWriteBtnClick = () => {
-        console.log('write');
+      
     };
     const prefetchSubscr = (sys_subscr_no) =>
         queryClient.prefetchQuery(['Subscr', 'detail', sys_subscr_no],
@@ -133,7 +133,7 @@ export default function SubscrPage(props) {
     };
 
     const handleFilterAnswerYN = async(bool) => {
-        console.log('handleFilterAnswerYN',bool);
+       
         if ( page > 1 ) {
             await setPage(1);            
         }
@@ -172,7 +172,7 @@ export default function SubscrPage(props) {
                 </Box>
             ),
             id: "user_nm",            
-            accessor: ({ user_nm,brand_nm }) => <Typography>[{brand_nm}]{user_nm}</Typography>,
+            accessor: ({ user_nm,brand_nm,input_id }) => <Typography>[{brand_nm}]{input_id == 'Admin' ? '관리자등록' : user_nm}</Typography>,
             width : 100
         },
         {

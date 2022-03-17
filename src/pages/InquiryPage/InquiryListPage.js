@@ -78,7 +78,7 @@ export default function InquiryPage(props) {
         );
     };
     const handleWriteBtnClick = () => {
-        console.log('write');
+
     };
     const prefetchInquiry = (sys_inqry_no) =>
         queryClient.prefetchQuery(['inquiry', 'detail', sys_inqry_no],
@@ -133,7 +133,6 @@ export default function InquiryPage(props) {
     };
 
     const handleFilterAnswerYN = async(bool) => {
-        console.log('handleFilterAnswerYN',bool);
         if ( page > 1 ) {
             await setPage(1);            
         }

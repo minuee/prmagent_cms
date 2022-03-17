@@ -61,7 +61,7 @@ export default function PrivacyPage() {
   );
 
   let handleEditBtnClick = () => {
-    console.log('edit');
+
   };
   let handleSaveBtnClick = () => {
     saveNewPrivacyPolicy.mutate(
@@ -72,13 +72,7 @@ export default function PrivacyPage() {
     );
   };
   let handleCancelBtnClick = () => {
-    console.log('cancel');
-    console.log(
-      value.replace(
-        '<table>',
-        '<table border="1" style="border-collapse: collapse;width: 100%">'
-      )
-    );
+
   };
 
   const [value, setValue] = useState('');

@@ -76,7 +76,7 @@ const HideBtn = styled.div`
     padding-left: 7px;
     top: 50px;
     left: ${(props) => (props.active ? "300px" : "0px")};
-    z-index: 999999;
+    z-index: 1200;
     border-top-right-radius: 18px;
     border-bottom-right-radius: 18px;
     cursor: pointer;

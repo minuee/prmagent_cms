@@ -9,6 +9,11 @@ export const SidebarList = [
     subList: [],
   },
   {
+    displayValue: '환경설정',
+    link: '/pr/setup',
+    subList: [],
+  },
+  {
     displayValue: '사용자 관리',
     link: '/pr/users',
     subList: [],

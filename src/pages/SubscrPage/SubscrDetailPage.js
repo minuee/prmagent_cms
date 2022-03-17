@@ -6,6 +6,7 @@ import PageSubtitle from 'components/PageSubtitle';
 import SaveButtonSection from 'components/SaveButtonSection';
 import React, { useRef, useState } from 'react';
 import { Fragment } from 'react';
+import dayjs from 'dayjs';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useHistory, useParams } from 'react-router-dom';
 import { fetchSubscr } from './common';
@@ -15,13 +16,19 @@ const useStyles = makeStyles(() => ({
     textAreaInput: {
         border: 0,
     },
+    buttomWrap : {
+        flex:1,
+        display:'flex',
+        flexDirection:'row',
+        justifyContent:'flex-end'
+    }
 }));
 
 export default function SubscrDetailPage() {
     const classes = useStyles();
     const { subscrId } = useParams();
     const queryClient = useQueryClient();
-
+    let nowDate = new Date();
     const inputRef = useRef(null);
     let history = useHistory();
 
@@ -37,7 +44,7 @@ export default function SubscrDetailPage() {
         : [
             {
                 keyText: '신청자',
-                valText: "[" + SubscrDetailQuery.data.brand_nm + "]" + SubscrDetailQuery.data.user_nm,
+                valText: SubscrDetailQuery.data.input_id == 'Admin' ? "[" + SubscrDetailQuery.data.brand_nm + "]관리자등록" : "[" + SubscrDetailQuery.data.brand_nm + "]" + SubscrDetailQuery.data.user_nm,
                 isHalf: true,
             },
             {
@@ -99,6 +106,38 @@ export default function SubscrDetailPage() {
         history.goBack();
     };
 
+    const handleCancelClick = () => {
+        if (confirm('정말로 구독을 취소하시겠습니까?')) {
+            cancleSubscribe.mutate({
+                subscr_no : SubscrDetailQuery.data.subscr_no,
+                subscr_man_id : SubscrDetailQuery.data.subscr_man_id,
+                brand_id : SubscrDetailQuery.data.brand_id,
+            });
+        }
+    };
+    const cancleSubscribe = useMutation(
+		["brand-user-cancleSubscribe"],
+		(value) =>
+            apiObject.cancleSubscribe(
+            {
+                subscr_no: value.subscr_no,  
+                subscr_man_id: value.subscr_man_id,  
+                brand_id: value.brand_id,  
+            },
+            () => {}
+            ),
+        {
+            onSuccess: () => {
+                alert('정상적으로 취소되었습니다');
+                SubscrDetailQuery.refetch();
+            },
+            onError: () => {
+                alert("수정 중 오류가 발생했습니다.");
+            },
+        }
+    );
+
+    console.log('dd',SubscrDetailQuery.data)
     return (
         <>
             <PageSubtitle textContent="구독관리 상세내역 " />
@@ -112,10 +151,28 @@ export default function SubscrDetailPage() {
                     <Box mb={2.5}>
                         <KeyValueTable dataSource={dataSource} />
                     </Box>
-                    <SaveButtonSection                        
+                    { ( parseInt(dayjs(SubscrDetailQuery.data.subscr_end_de).unix()) > parseInt(dayjs(nowDate).unix())  && SubscrDetailQuery.data.canc_yn == false ) ?
+                    <div style={{display:'flex', flexDirection:'row',flexGrow:1,justifyContent:'flex-end'}}>
+                        <div style={{width:200}}>
+                            <SaveButtonSection
+                                onCancel={handleCancelClick}
+                                cancelText="구독취소"    
+                            />
+                        </div>
+                        <div style={{width:200}}>
+                            <SaveButtonSection
+                                onCancel={handleListBtnClick}
+                                cancelText="목록"    
+                            />
+                        </div>
+                    </div>
+                    :
+                    <SaveButtonSection
                         onCancel={handleListBtnClick}
-                        cancelText="목록"                        
+                        cancelText="목록"    
                     />
+                    }
+                    
                 </Fragment>
             )}
         </>

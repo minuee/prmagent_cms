@@ -52,15 +52,13 @@ function App() {
   const checkAuth = async () => {
     try {
       var auth = await Auth.currentSession();
-      console.log('checkAuth -> auth', auth);
-
+ 
       dispatch({
         type: 'SET_USER_STATE',
         payload: UserState.SIGNED,
       });
     } catch (error) {
-      console.log('checkToLogin -> error', error);
-
+  
       dispatch({
         type: 'SET_USER_STATE',
         payload: UserState.NOT_SIGN,

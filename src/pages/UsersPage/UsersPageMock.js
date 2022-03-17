@@ -155,6 +155,11 @@ export const USER_DETAIL_TABLE = [
         key: 'user_color_form',
         label: '테마칼라',
         type: 'string',
+      },
+      {
+        key: 'order_value_form',
+        label: '노출우선순위',
+        type: 'string',
       }      
     ],
   },

@@ -7,6 +7,7 @@ import { PrivacyPage, TermsOfServicePage } from 'pages/PolicyPage';
 import SetLoginImagePage from 'pages/SetLoginImagePage';
 import { UserListPage, UserDetailPage } from 'pages/UsersPage';
 import {NoticeListPage,NoticeDetailPage,NoticeCreatePage} from 'pages/NoticePage';
+import {SetupPage} from 'pages/SetupPage';
 import Feedback from 'components/Feedback';
 import { useQueryClient } from 'react-query';
 import { RecoilRoot } from "recoil";
@@ -14,7 +15,6 @@ import { RecoilRoot } from "recoil";
 export default function DashboardRoutes() {
     const [feedbackOpen, setFeedbackOpen] = useState(false);
     const queryClient = useQueryClient();
-    // console.log(queryClient.getQueryData(['feedback-msg']));
     useEffect(() => {
         if (queryClient.getQueryData(['feedback-msg'])) {
             setFeedbackOpen(true);
@@ -37,6 +37,7 @@ export default function DashboardRoutes() {
 
                     <Route path="/pr/set-login-image" component={SetLoginImagePage} />
                     <Route exact path="/pr/users" component={UserListPage} />
+                    <Route exact path="/pr/setup" component={SetupPage} />
                     <Route path="/pr/users/:userId/:userType" component={UserDetailPage} />
                     <Route exact path="/pr/inquiry" component={InquiryListPage} />
                     <Route path="/pr/inquiry/:inquiryId" component={InquiryDetailPage} />

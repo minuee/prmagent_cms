@@ -279,7 +279,7 @@ export default function UsersPage(props) {
         amount_excel: !open.amount_excel,
       });
     } else {
-      console.log('Wrong type...');
+      console.log('1')
     }
   };
 
